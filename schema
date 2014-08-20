@@ -1,0 +1,13 @@
+Database: pollsapp
+Collection/Tables: polls
+Schema:
+
+{
+	question:'demo',
+	choices: {
+		text: 'text votes',
+		votes: {
+			ip:'192.168.1.173'
+		}
+	}
+}
