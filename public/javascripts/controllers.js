@@ -17,8 +17,27 @@ function PollListCtrl($scope, socket, Poll) {
       Poll.insertPollIntoList({_id:data._id,question:data.question});
     }
   });
-  //broadcast:questions
-  //newadded:question
+
+  // socket.on('remove:question', function(data) {
+  //   console.dir(data);
+  //   if(data._id!='') {
+  //     // $scope.poll = data;
+  //     Poll.removePollFromList(data);
+  //   }
+  // });
+  socket.on('broadcast_remove:questions', function(data) {
+    console.dir(data);
+    if(data._id!='') {
+      // $scope.poll = data;
+      Poll.removePollFromList(data);
+    }
+  });
+  $scope.delete = function(obj){
+    if(confirm('Do you really want to delete this poll?')){
+      Poll.removePollFromList(obj);
+      socket.emit('delete:question', obj);
+    }
+  };
 }
 // Voting / viewing poll results
 function PollItemCtrl($scope, $routeParams, socket, Poll) { 

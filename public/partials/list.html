@@ -20,7 +20,7 @@
   </ul>
   <ul ng-switch-default>
     <li ng-repeat="poll in polls | filter:query">
-      <a href="/polls/poll/{{poll._id}}">{{poll.question}}</a>
+      <a href="/polls/poll/{{poll._id}}">{{poll.question}}</a>&nbsp;-&nbsp;<a ng-click="delete(poll)" ng-style="{cursor:'pointer'}">delete</a>
     </li>
   </ul>
 </div>

@@ -111,4 +111,18 @@ exports.vote = function(socket) {
       }   
     });
   });
+
+  socket.on('delete:question', function(pollObj) {
+    // CODE TO DELETE
+    // console.log(pollObj._id);
+    Poll.findById( pollObj._id , function(err, doc){
+      if(err || !doc) {
+        throw 'Error';
+      } else {
+        // socket.emit('remove:question', pollObj);
+        doc.remove();
+        socket.broadcast.emit('broadcast_remove:questions', pollObj);
+      }   
+    });
+  });
 };
