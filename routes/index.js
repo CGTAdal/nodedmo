@@ -71,7 +71,7 @@ exports.vote = function(socket) {
     var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;    
     Poll.findById(data.poll_id, function(err, poll) {
       var choice = poll.choices.id(data.choice);
-      choice.votes.push({ ip: ip });      
+      choice.votes.push({ ip: ip });
       poll.save(function(err, doc) {
         var theDoc = { 
           question: doc.question, _id: doc._id, choices: doc.choices, 
@@ -89,9 +89,26 @@ exports.vote = function(socket) {
             }
           }
         }       
-        socket.emit('myvote', theDoc);
-        socket.broadcast.emit('vote', theDoc);
+        socket.emit('newadded:vote', theDoc);
+        socket.broadcast.emit('broadcast:vote', theDoc);
       });     
+    });
+  });
+
+  socket.on('send:question', function(pollObj) {
+    // CODE TO CREATE NEW POLL
+    // var reqBody = req.body,
+    //     choices = reqBody.choices.filter(function(v) { return v.text != ''; }),
+    //     pollObj = {question: reqBody.question, choices: choices};
+    var poll = new Poll(pollObj);
+    poll.save(function(err, doc) {
+      if(err || !doc) {
+        throw 'Error';
+      } else {
+        socket.emit('newadded:question', doc);
+        socket.broadcast.emit('broadcast:questions', doc);
+        // res.json(doc);
+      }   
     });
   });
 };

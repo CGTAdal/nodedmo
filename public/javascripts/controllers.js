@@ -1,6 +1,24 @@
 // Managing the poll list
-function PollListCtrl($scope,Poll) {
-  $scope.polls = Poll.query();
+function PollListCtrl($scope, socket, Poll) {
+  $scope.polls = Poll.getPollList();
+  Poll.all();
+  // console.log($scope.polls[1]);
+  socket.on('newadded:question', function(data) {
+    console.dir(data);
+    if(data._id!='') {
+      // $scope.poll = data;
+      Poll.insertPollIntoList({_id:data._id,question:data.question});
+    }
+  });
+  socket.on('broadcast:questions', function(data) {
+    console.dir(data);
+    if(data._id!='') {
+      // $scope.poll = data;
+      Poll.insertPollIntoList({_id:data._id,question:data.question});
+    }
+  });
+  //broadcast:questions
+  //newadded:question
 }
 // Voting / viewing poll results
 function PollItemCtrl($scope, $routeParams, socket, Poll) { 
@@ -8,13 +26,13 @@ function PollItemCtrl($scope, $routeParams, socket, Poll) {
   // $scope.vote = function() {};
 
   $scope.poll = Poll.get({pollId: $routeParams.pollId});
-  socket.on('myvote', function(data) {
+  socket.on('newadded:vote', function(data) {
     console.dir(data);
     if(data._id === $routeParams.pollId) {
       $scope.poll = data;
     }
   });
-  socket.on('vote', function(data) {
+  socket.on('broadcast:vote', function(data) {
     console.dir(data);
     if(data._id === $routeParams.pollId) {
       $scope.poll.choices = data.choices;
@@ -33,7 +51,7 @@ function PollItemCtrl($scope, $routeParams, socket, Poll) {
   };
 }
 // Creating a new poll
-function PollNewCtrl($scope, $location, Poll) {
+function PollNewCtrl($scope, $location, socket, Poll) {
   $scope.poll = {
     question: '',
     choices: [ { text: '' }, { text: '' }, { text: '' }]
@@ -52,14 +70,19 @@ function PollNewCtrl($scope, $location, Poll) {
         }
       }    
       if(choiceCount > 1) {
-        var newPoll = new Poll(poll);       
-        newPoll.$save(function(p, resp) {
-          if(!p.error) { 
-            $location.path('polls');
-          } else {
-            alert('Could not create poll');
-          }
-        });
+        // var newPoll = new Poll(poll);
+        // newPoll.$save(function(p, resp) {
+        //   if(!p.error) { 
+        //     $location.path('polls');
+        //   } else {
+        //     alert('Could not create poll');
+        //   }
+        // });
+        
+        // var newPoll = new Poll(poll);
+        // var voteObj = { poll_id: pollId, choice: choiceId };
+        socket.emit('send:question', poll);
+        $location.path('polls');
       } else {
         alert('You must enter at least two choices');
       }
