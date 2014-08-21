@@ -15,7 +15,6 @@ pollApp.config(['$routeProvider','$locationProvider', function($routeProvider, $
 			templateUrl: '/partials/new.html', controller: PollNewCtrl 
 		})
 		.otherwise({ 
-			redirectTo: '/polls' 
+			redirectTo: '/polls'
 		});
-		
 }]);
