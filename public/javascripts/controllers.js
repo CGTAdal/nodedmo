@@ -5,16 +5,16 @@ function PollListCtrl($scope, socket, Poll) {
   // console.log($scope.polls[1]);
   socket.on('newadded:question', function(data) {
     console.dir(data);
-    if(data._id!='') {
+    if(data.id!='') {
       // $scope.poll = data;
-      Poll.insertPollIntoList({_id:data._id,question:data.question});
+      Poll.insertPollIntoList(data);
     }
   });
   socket.on('broadcast:questions', function(data) {
     console.dir(data);
-    if(data._id!='') {
+    if(data.id!='') {
       // $scope.poll = data;
-      Poll.insertPollIntoList({_id:data._id,question:data.question});
+      Poll.insertPollIntoList(data);
     }
   });
 
@@ -27,7 +27,7 @@ function PollListCtrl($scope, socket, Poll) {
   // });
   socket.on('broadcast_remove:questions', function(data) {
     console.dir(data);
-    if(data._id!='') {
+    if(data.id!='') {
       // $scope.poll = data;
       Poll.removePollFromList(data);
     }
@@ -47,13 +47,13 @@ function PollItemCtrl($scope, $routeParams, socket, Poll) {
   $scope.poll = Poll.get({pollId: $routeParams.pollId});
   socket.on('newadded:vote', function(data) {
     console.dir(data);
-    if(data._id === $routeParams.pollId) {
+    if(data.id === $routeParams.pollId) {
       $scope.poll = data;
     }
   });
   socket.on('broadcast:vote', function(data) {
     console.dir(data);
-    if(data._id === $routeParams.pollId) {
+    if(data.id === $routeParams.pollId) {
       $scope.poll.choices = data.choices;
       $scope.poll.totalVotes = data.totalVotes;
     }   
@@ -73,7 +73,7 @@ function PollItemCtrl($scope, $routeParams, socket, Poll) {
 function PollNewCtrl($scope, $location, socket, Poll) {
   $scope.poll = {
     question: '',
-    choices: [ { text: '' }, { text: '' }, { text: '' }]
+    choices: [ { text: '' }, { text: '' }, { text: '' }, { text: '' }]
   };  
   $scope.addChoice = function() {
     $scope.poll.choices.push({ text: '' });

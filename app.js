@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', routes.index)
 app.get('/polls/polls', routes.list);
 app.get('/polls/:id', routes.poll);
-app.post('/polls', routes.create);
+// app.post('/polls', routes.create);
 app.get('*', routes.index);
 
 /// catch 404 and forward to error handler

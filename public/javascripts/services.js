@@ -52,7 +52,7 @@ pollServices.factory('Poll', function($resource) {
 
   Poll.removePollFromList = function(obj){
     angular.forEach(pollList, function(existingobj, index) {
-      if (pollList[index]._id == obj._id) {
+      if (pollList[index].id == obj.id) {
         pollList.splice(index, 1);
         return;
       }

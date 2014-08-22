@@ -1,34 +1,26 @@
-var pg = require('pg');
-var conString = "postgres://nodeuser:nodeuser@localhost/poll_dev";
+/*var express = require('express');
+var router = express.Router();
 
-// var PollSchema = require('../models/Poll.js').PollSchema;
-// var Poll = db.model('polls', PollSchema);
+// GET home page.
+router.get('/', function(req, res) {
+  res.render('index', { title: 'Polls' });
+});
+
+module.exports = router;*/
+
+var mongoose = require('mongoose');
+var db = mongoose.createConnection('localhost', 'pollsapp');
+
+var PollSchema = require('../models/Poll.js').PollSchema;
+var Poll = db.model('polls', PollSchema);
 
 module.exports.index = function(req, res) {
   res.render('index', {title: 'Polls'});
 };
 // JSON API for list of polls
 module.exports.list = function(req, res) { 
-  // Poll.find({}, 'question', function(error, polls) {
-  //   res.json(polls);
-  // });
-  pg.connect(conString, function(err, client, done) {
-    if(err) {
-      return console.error('error fetching client from pool', err);
-    }
-    client.query("SELECT * FROM polls WHERE status='1'", function(err, result) {
-      //call `done()` to release the client back to the pool
-      done();
-
-      if(err) {
-        // return console.error('error running query', err);
-        console.error('error running query', err);
-        throw 'Error';
-      }else{
-        // console.log(result.rows[0].number);
-        res.json(result.rows);
-      }
-    });
+  Poll.find({}, 'question', function(error, polls) {
+    res.json(polls);
   });
 };
 // JSON API for getting a single poll
@@ -60,7 +52,7 @@ module.exports.poll = function(req, res) {
   });
 };
 // JSON API for creating a new poll
-/*module.exports.create = function(req, res) {
+module.exports.create = function(req, res) {
   var reqBody = req.body,
       choices = reqBody.choices.filter(function(v) { return v.text != ''; }),
       pollObj = {question: reqBody.question, choices: choices};
@@ -72,7 +64,7 @@ module.exports.poll = function(req, res) {
       res.json(doc);
     }   
   });
-};*/
+};
 
 // TO HANDLE THE VOTING BY SOCKET
 exports.vote = function(socket) {
@@ -107,42 +99,25 @@ exports.vote = function(socket) {
   // TO HANDLE THE REAL TIME QUESTION ADDITION
   socket.on('send:question', function(pollObj) {
     // CODE TO CREATE NEW POLL
-    // var poll = new Poll(pollObj);
-    // poll.save(function(err, doc) {
-    //   if(err || !doc) {
-    //     throw 'Error';
-    //   } else {
-    //     socket.emit('newadded:question', doc);
-    //     socket.broadcast.emit('broadcast:questions', doc);
-    //     // res.json(doc);
-    //   }   
-    // });
-
-    pg.connect(conString, function(err, client, done) {
-      if(err) {
-        return console.error('error fetching client from pool', err);
-      }
-      // var datetime = new Date();
-      var datetime = "2014-08-22 18:38:00";
-      client.query("INSERT INTO polls (question,status,created_on,option_1,option_2,option_3,option_4) VALUES ($1,true,'"+datetime+"',$2,$3,$4,$5) RETURNING *", [pollObj.question,pollObj.choices[0].text,pollObj.choices[1].text,pollObj.choices[2].text,pollObj.choices[3].text], function(err, result) {
-        //call `done()` to release the client back to the pool
-        done();
-        if(err) {
-          // return console.error('error running query', err);
-          console.error('error running query', err);
-          throw 'Error';
-        }else{
-          socket.emit('newadded:question', result.rows[0]);
-          socket.broadcast.emit('broadcast:questions', result.rows[0]);
-        }
-      });
+    // var reqBody = req.body,
+    //     choices = reqBody.choices.filter(function(v) { return v.text != ''; }),
+    //     pollObj = {question: reqBody.question, choices: choices};
+    var poll = new Poll(pollObj);
+    poll.save(function(err, doc) {
+      if(err || !doc) {
+        throw 'Error';
+      } else {
+        socket.emit('newadded:question', doc);
+        socket.broadcast.emit('broadcast:questions', doc);
+        // res.json(doc);
+      }   
     });
-
   });
   // TO HANDLE THE REAL TIME QUESTION DELETION
   socket.on('delete:question', function(pollObj) {
     // CODE TO DELETE
-    /*Poll.findById( pollObj._id , function(err, doc){
+    // console.log(pollObj._id);
+    Poll.findById( pollObj._id , function(err, doc){
       if(err || !doc) {
         throw 'Error';
       } else {
@@ -150,26 +125,6 @@ exports.vote = function(socket) {
         doc.remove();
         socket.broadcast.emit('broadcast_remove:questions', pollObj);
       }   
-    });*/
-
-    pg.connect(conString, function(err, client, done) {
-      if(err) {
-        return console.error('error fetching client from pool', err);
-      }
-      // var datetime = new Date();
-      var datetime = "2014-08-22 18:38:00";
-      client.query("DELETE FROM polls WHERE id = $1 RETURNING *", [pollObj.id], function(err, result) {
-        //call `done()` to release the client back to the pool
-        done();
-        if(err) {
-          // return console.error('error running query', err);
-          console.error('error running query', err);
-          throw 'Error';
-        }else{
-          console.log(result);
-          socket.broadcast.emit('broadcast_remove:questions', result.rows[0]);
-        }
-      });
     });
   });
 };
