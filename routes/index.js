@@ -10,6 +10,7 @@ module.exports = router;*/
 
 var mongoose = require('mongoose');
 var db = mongoose.createConnection('localhost', 'pollsapp');
+
 var PollSchema = require('../models/Poll.js').PollSchema;
 var Poll = db.model('polls', PollSchema);
 

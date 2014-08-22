@@ -65,7 +65,7 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-app.set('port',5000);
+app.set('port',3000);
 
 // app.listen(5000);
 var server = http.createServer(app);
