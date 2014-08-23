@@ -1,5 +1,7 @@
 var pg = require('pg');
-var conString = "postgres://nodeuser:nodeuser@localhost/poll_dev";
+// var conString = "postgres://nodeuser:nodeuser@localhost/poll_dev";
+var conString = process.env.DATABASE_URL;
+
 
 // var PollSchema = require('../models/Poll.js').PollSchema;
 // var Poll = db.model('polls', PollSchema);
