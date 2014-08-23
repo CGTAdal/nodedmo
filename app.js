@@ -65,7 +65,8 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-app.set('port',3000);
+// app.set('port',3000);
+var port = process.env.PORT || 5000;
 
 // app.listen(5000);
 var server = http.createServer(app);
@@ -73,6 +74,7 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', routes.vote);
 
-server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+server.listen(port, function(){
+  // console.log('Express server listening on port ' + app.get('port'));
+  console.log('Express server listening on port ' + port);
 });
