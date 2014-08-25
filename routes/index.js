@@ -5,6 +5,19 @@ var conString = process.env.DATABASE_URL;
 
 // var PollSchema = require('../models/Poll.js').PollSchema;
 // var Poll = db.model('polls', PollSchema);
+var getIp = function(req){
+  var ipAddr = req.headers["x-forwarded-for"];
+  if (ipAddr){
+    var list = ipAddr.split(",");
+    ipAddr = list[list.length-1];
+    console.log(' forwarded ip '+ipAddr);
+  } else {
+    ipAddr = req.connection.remoteAddress;
+    console.log(' remote ip in else '+ipAddr);
+  }
+  console.log(' remote ip '+req.connection.remoteAddress);
+  return ipAddr;
+};
 
 module.exports.index = function(req, res) {
   res.render('index', {title: 'Polls'});
@@ -14,6 +27,8 @@ module.exports.list = function(req, res) {
   // Poll.find({}, 'question', function(error, polls) {
   //   res.json(polls);
   // });
+  // console.log(getIp(req));
+  getIp(req);
   pg.connect(conString, function(err, client, done) {
     if(err) {
       return console.error('error fetching client from pool', err);
@@ -156,6 +171,20 @@ exports.vote = function(socket) {
     // var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
     // var ip = socket.request.connection.remoteAddress || socket.handshake.address.address;
     var ip = socket.request.connection.remoteAddress || socket.handshake.headers['x-forwarded-for'];
+    console.log('socket.remoteAddress '+socket.remoteAddress);
+    console.log('socket.handshake.headers '+socket.handshake.headers['x-forwarded-for']);
+    console.log('socket.connection.remoteAddress '+socket.connection.remoteAddress);
+    console.log('socket.address '+socket.address());
+    
+
+    /*var ipAddr = req.headers["x-forwarded-for"];
+    if (ipAddr){
+      var list = ipAddr.split(",");
+      ipAddr = list[list.length-1];
+    } else {
+      ipAddr = req.connection.remoteAddress;
+    }
+    var ip = ipAddr;*/
 
     /*Poll.findById(data.poll_id, function(err, poll) {
       var choice = poll.choices.id(data.choice);
