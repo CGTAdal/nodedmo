@@ -173,7 +173,7 @@ exports.vote = function(socket) {
     var ip = socket.request.connection.remoteAddress || socket.handshake.headers['x-forwarded-for'];
     console.log('socket.request.connection.remoteAddress '+socket.request.connection.remoteAddress);
     console.log('socket.handshake.headers '+socket.handshake.headers['x-forwarded-for']);
-    console.log('socket.connection.remoteAddress '+socket.connection.remoteAddress);
+    // console.log('socket.connection.remoteAddress '+socket.connection.remoteAddress);
     console.log('socket.address '+socket.address());
     
 
