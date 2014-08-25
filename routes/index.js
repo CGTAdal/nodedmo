@@ -178,7 +178,7 @@ exports.vote = function(socket) {
     // console.log('socket.remoteAddress '+socket.remoteAddress);
     // console.log(socket.handshake);
     // console.log(socket.request.connection);
-    console.log(socket);
+    console.log(socket.handshake.headers);
     
     
 
