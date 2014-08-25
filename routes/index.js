@@ -154,7 +154,7 @@ exports.vote = function(socket) {
   // TO HANDLE THE REAL TIME VOTTING
   socket.on('send:vote', function(data) {
     // var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
-    // var ip = socket.request.connection.remoteAddress || (socket.handshake.address)? socket.handshake.address.address;
+    // var ip = socket.request.connection.remoteAddress || socket.handshake.address.address;
     var ip = socket.request.connection.remoteAddress || socket.handshake.headers['x-forwarded-for'];
 
     /*Poll.findById(data.poll_id, function(err, poll) {
