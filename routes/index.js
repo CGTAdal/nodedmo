@@ -175,7 +175,10 @@ exports.vote = function(socket) {
     console.log('socket.handshake.headers '+socket.handshake.headers['x-forwarded-for']);
     // console.log('socket.connection.remoteAddress '+socket.connection.remoteAddress);
     // console.log('socket.address '+socket.address());
-    console.log('socket.remoteAddress '+socket.remoteAddress);
+    // console.log('socket.remoteAddress '+socket.remoteAddress);
+    // console.log(socket.handshake);
+    // console.log(socket.request.connection);
+    console.log(socket);
     
     
 

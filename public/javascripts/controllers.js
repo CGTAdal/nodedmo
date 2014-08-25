@@ -4,14 +4,14 @@ function PollListCtrl($scope, socket, Poll) {
   Poll.all();
   // console.log($scope.polls[1]);
   socket.on('newadded:question', function(data) {
-    console.dir(data);
+    // console.dir(data);
     if(data.id!='') {
       // $scope.poll = data;
       Poll.insertPollIntoList(data);
     }
   });
   socket.on('broadcast:questions', function(data) {
-    console.dir(data);
+    // console.dir(data);
     if(data.id!='') {
       // $scope.poll = data;
       Poll.insertPollIntoList(data);
@@ -26,7 +26,7 @@ function PollListCtrl($scope, socket, Poll) {
   //   }
   // });
   socket.on('broadcast_remove:questions', function(data) {
-    console.dir(data);
+    // console.dir(data);
     if(data.id!='') {
       // $scope.poll = data;
       Poll.removePollFromList(data);
