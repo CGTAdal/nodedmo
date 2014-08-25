@@ -171,7 +171,7 @@ exports.vote = function(socket) {
     // var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
     // var ip = socket.request.connection.remoteAddress || socket.handshake.address.address;
     var ip = socket.request.connection.remoteAddress || socket.handshake.headers['x-forwarded-for'];
-    console.log('socket.remoteAddress '+socket.remoteAddress);
+    console.log('socket.request.connection.remoteAddress '+socket.request.connection.remoteAddress);
     console.log('socket.handshake.headers '+socket.handshake.headers['x-forwarded-for']);
     console.log('socket.connection.remoteAddress '+socket.connection.remoteAddress);
     console.log('socket.address '+socket.address());
