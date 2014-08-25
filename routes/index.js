@@ -10,12 +10,12 @@ var getIp = function(req){
   if (ipAddr){
     var list = ipAddr.split(",");
     ipAddr = list[list.length-1];
-    console.log(' forwarded ip '+ipAddr);
+    // console.log(' forwarded ip '+ipAddr);
   } else {
     ipAddr = req.connection.remoteAddress;
-    console.log(' remote ip in else '+ipAddr);
+    // console.log(' remote ip in else '+ipAddr);
   }
-  console.log(' remote ip '+req.connection.remoteAddress);
+  // console.log(' remote ip '+req.connection.remoteAddress);
   return ipAddr;
 };
 
@@ -28,7 +28,7 @@ module.exports.list = function(req, res) {
   //   res.json(polls);
   // });
   // console.log(getIp(req));
-  getIp(req);
+  // getIp(req);
   pg.connect(conString, function(err, client, done) {
     if(err) {
       return console.error('error fetching client from pool', err);
